@@ -1,40 +1,35 @@
-<div align="center">
+# JS-HUNTER
 
-```text
-       __ ____       __  ____  __  _  ______  ____  ____ 
-      / // __/____  / / / / / / / / /_  __/ / __/ / __ \
- __  / /_\ \/ ___/ / /_/ / / / / /   / /   / _/  / /_/ /
-/ /_/ /___/ /     / __  / /_/ / /   / /   / /___/ _, _/ 
-\____//____/     /_/ /_/\____/_/   /_/   /_____/_/ |_|  
-                                                         
->>> INTELLIGENT CLIENT-SIDE STATIC ANALYSIS TOOL (SAST) <<<
-</div>
+![Language](https://img.shields.io/badge/Language-Go_1.25%2B-00ADD8?style=flat-square) ![Architecture](https://img.shields.io/badge/Architecture-SAST-orange?style=flat-square) ![Build](https://img.shields.io/badge/Build-Passing-green?style=flat-square) ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 
-PROJECT OVERVIEW
-JS-HUNTER is an advanced offensive security tool designed for automated reconnaissance and static analysis of JavaScript files. Unlike traditional scanners that rely solely on Regular Expressions (Regex), JS-HUNTER implements a Multi-Layer Analysis Engine combining signature matching with Shannon Entropy Mathematics.
+---
 
-This approach allows the tool to distinguish between "false positive" strings (like placeholders or common functions) and "true positive" secrets (like high-entropy API keys, PII, or hardcoded credentials), significantly reducing noise for security researchers.
+## Overview
 
-Core Capabilities
+**JS-Hunter** is a high-performance, concurrent static analysis tool (SAST) written in Golang. Designed for security researchers and red team operations, it specializes in detecting hardcoded secrets, PII leaks, and vulnerable code patterns within client-side JavaScript files.
 
-Deep Crawling: Automatically parses HTML to extract absolute and relative script paths.
+Unlike standard regex-based scanners, this tool implements a **Shannon Entropy Analysis Engine** to mathematically validate the randomness of potential secrets, effectively distinguishing between true API keys and false positive placeholders.
 
-Entropy Analysis: Calculus-based validation to detect random strings (potential keys).
+## Key Capabilities
 
-Smart Filtering: Internal whitelist engine to ignore common JS noise (setTimeout, node_modules, jquery).
+* **Smart Entropy Engine (V1.5)** Implements calculus-based entropy analysis to filter out low-quality matches. Only strings with high randomness (like AWS keys or private tokens) are flagged, significantly reducing alert fatigue.
 
-Paranoid Mode: Aggressive scanning for PII (Emails), Internal IPs, and Dangerous Functions (eval, innerHTML).
+* **Advanced Noise Filtering** Features an internal whitelisting logic that automatically ignores common non-sensitive JavaScript functions (e.g., `setTimeout`, `setInterval`, `jQuery` selectors) to keep reports clean and actionable.
 
-TECHNICAL ARCHITECTURE
-The scanner operates on a 3-stage pipeline designed for high-concurrency and accuracy.
-graph TD;
-    A[Target URL] -->|Crawler Engine| B(Extract JS Links);
-    B -->|Worker Pool (Concurrency)| C{Download Content};
-    C -->|Layer 1: Regex| D[Signature Match];
-    D -->|Layer 2: Noise Filter| E[Whitelist Check];
-    E -->|Layer 3: Math| F[Shannon Entropy Calc];
-    F -->|Result| G[JSON Report];
+* **Deep Infrastructure Crawling** Automatically parses HTML targets to extract and resolve both absolute and relative JavaScript paths, ensuring comprehensive coverage of the target's client-side assets.
 
-INSTALLATION
-Ensure you have Go 1.25+ installed on your machine.
+* **Paranoid Scanning Mode** Capable of identifying a wide range of security issues beyond just API keys, including:
+    * **DOM XSS Sinks:** Usage of dangerous functions like `eval()` or `innerHTML`.
+    * **PII Leaks:** Hardcoded email addresses and internal IP ranges.
+    * **Cloud Configs:** Exposed S3 buckets and cloud service credentials.
 
+* **High-Concurrency Architecture** Built using Go's worker pools to perform parallel downloading and scanning of hundreds of files in seconds without blocking resources.
+
+## Installation
+
+Ensure you have **Go 1.25+** installed.
+
+```bash
+git clone [https://github.com/DrajatAkbarr/js-hunter.git](https://github.com/DrajatAkbarr/js-hunter.git)
+cd js-hunter
+go mod tidy

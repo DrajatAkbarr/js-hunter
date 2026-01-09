@@ -1,0 +1,10 @@
+jshunter
+jshunter.exe
+main
+main.exe
+
+results.json
+*.json
+
+.DS_Store
+Thumbs.db
